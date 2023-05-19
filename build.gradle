@@ -3,6 +3,7 @@ plugins {
     id 'com.github.johnrengelman.shadow' version '8.1.1'
     id 'com.adarshr.test-logger' version '3.2.0'
     id 'jacoco'
+    id 'com.diffplug.spotless' version '6.18.0'
 }
 
 repositories {
@@ -70,4 +71,11 @@ dependencies {
     testImplementation 'org.assertj:assertj-core:3.24.2'
     testImplementation 'net.javacrumbs.json-unit:json-unit:2.37.0'
     testImplementation 'net.javacrumbs.json-unit:json-unit-assertj:2.37.0'
+}
+
+spotless{
+    java {
+        removeUnusedImports()
+        googleJavaFormat('1.13.0').aosp()
+    }
 }
