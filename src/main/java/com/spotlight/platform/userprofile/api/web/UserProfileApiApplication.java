@@ -9,6 +9,7 @@ import com.spotlight.platform.userprofile.api.web.modules.UserProfileApiModule;
 import io.dropwizard.Application;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
+
 import ru.vyarus.dropwizard.guice.GuiceBundle;
 
 public class UserProfileApiApplication extends Application<UserProfileApiConfiguration> {
@@ -23,11 +24,12 @@ public class UserProfileApiApplication extends Application<UserProfileApiConfigu
     @Override
     public void initialize(Bootstrap<UserProfileApiConfiguration> bootstrap) {
         super.initialize(bootstrap);
-        guiceBundle = GuiceBundle.builder()
-                .enableAutoConfig(getClass().getPackage().getName())
-                .modules(new UserProfileApiModule())
-                .printDiagnosticInfo()
-                .build();
+        guiceBundle =
+                GuiceBundle.builder()
+                        .enableAutoConfig(getClass().getPackage().getName())
+                        .modules(new UserProfileApiModule())
+                        .printDiagnosticInfo()
+                        .build();
         bootstrap.addBundle(guiceBundle);
         bootstrap.setObjectMapper(JsonMapper.getInstance());
     }
@@ -43,7 +45,11 @@ public class UserProfileApiApplication extends Application<UserProfileApiConfigu
     }
 
     private void registerHealthChecks(Environment environment) {
-        environment.healthChecks().register(PreventStartupWarningHealthCheck.NAME, getInstance(PreventStartupWarningHealthCheck.class));
+        environment
+                .healthChecks()
+                .register(
+                        PreventStartupWarningHealthCheck.NAME,
+                        getInstance(PreventStartupWarningHealthCheck.class));
     }
 
     private void registerExceptionMappers(Environment environment) {

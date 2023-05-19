@@ -1,6 +1,11 @@
 package com.spotlight.platform.userprofile.api.web.exceptionmappers;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.spotlight.platform.userprofile.api.core.exceptions.EntityNotFoundException;
+
+import io.dropwizard.testing.junit5.DropwizardExtensionsSupport;
+import io.dropwizard.testing.junit5.ResourceExtension;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,19 +17,15 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Response;
 
-import io.dropwizard.testing.junit5.DropwizardExtensionsSupport;
-import io.dropwizard.testing.junit5.ResourceExtension;
-
-import static org.assertj.core.api.Assertions.assertThat;
-
 @ExtendWith(DropwizardExtensionsSupport.class)
 class EntityNotFoundExceptionMapperTest {
 
-    private static final ResourceExtension EXT = ResourceExtension.builder()
-            .addResource(new MockResource())
-            .setRegisterDefaultExceptionMappers(false)
-            .addProvider(new EntityNotFoundExceptionMapper())
-            .build();
+    private static final ResourceExtension EXT =
+            ResourceExtension.builder()
+                    .addResource(new MockResource())
+                    .setRegisterDefaultExceptionMappers(false)
+                    .addProvider(new EntityNotFoundExceptionMapper())
+                    .build();
 
     private Client client;
 
@@ -35,7 +36,10 @@ class EntityNotFoundExceptionMapperTest {
 
     @Test
     void entityNotFound_ResultsIn404() {
-        Response response = client.target(MockResource.RESOURCE_URLS.THROW_EXCEPTION).request().post(Entity.json("{}"));
+        Response response =
+                client.target(MockResource.RESOURCE_URLS.THROW_EXCEPTION)
+                        .request()
+                        .post(Entity.json("{}"));
 
         assertThat(response.getStatus()).isEqualTo(Response.Status.NOT_FOUND.getStatusCode());
     }

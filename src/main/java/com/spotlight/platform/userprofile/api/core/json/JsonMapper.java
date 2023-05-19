@@ -11,8 +11,7 @@ import io.dropwizard.jackson.Jackson;
 public class JsonMapper {
     private static final ObjectMapper MAPPER_INSTANCE = createInstance();
 
-    private JsonMapper() {
-    }
+    private JsonMapper() {}
 
     public static ObjectMapper createInstance() {
         var objectMapper = Jackson.newObjectMapper();

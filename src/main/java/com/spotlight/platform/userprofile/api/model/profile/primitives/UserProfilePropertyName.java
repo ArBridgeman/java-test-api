@@ -3,7 +3,8 @@ package com.spotlight.platform.userprofile.api.model.profile.primitives;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.spotlight.platform.userprofile.api.model.common.AlphaNumericalStringWithMaxLength;
 
-public class UserProfilePropertyName extends AlphaNumericalStringWithMaxLength implements Comparable<UserProfilePropertyName> {
+public class UserProfilePropertyName extends AlphaNumericalStringWithMaxLength
+        implements Comparable<UserProfilePropertyName> {
 
     @JsonCreator
     protected UserProfilePropertyName(String value) {
@@ -29,4 +30,3 @@ public class UserProfilePropertyName extends AlphaNumericalStringWithMaxLength i
         return super.hashCode();
     }
 }
-
