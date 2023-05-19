@@ -1,11 +1,11 @@
 package com.spotlight.platform.userprofile.api.model.common;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spotlight.platform.userprofile.api.core.json.JsonMapper;
 
 import org.junit.jupiter.api.Test;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 class WrappedStringTest {
 

@@ -13,8 +13,14 @@ public class UserProfileFixtures {
 
     public static final Instant LAST_UPDATE_TIMESTAMP = Instant.parse("2021-06-01T09:16:36.123Z");
 
-    public static final UserProfile USER_PROFILE = new UserProfile(USER_ID, LAST_UPDATE_TIMESTAMP,
-            Map.of(UserProfilePropertyName.valueOf("property1"), UserProfilePropertyValue.valueOf("property1Value")));
+    public static final UserProfile USER_PROFILE =
+            new UserProfile(
+                    USER_ID,
+                    LAST_UPDATE_TIMESTAMP,
+                    Map.of(
+                            UserProfilePropertyName.valueOf("property1"),
+                            UserProfilePropertyValue.valueOf("property1Value")));
 
-    public static final String SERIALIZED_USER_PROFILE = FixtureHelpers.fixture("/fixtures/model/profile/userProfile.json");
+    public static final String SERIALIZED_USER_PROFILE =
+            FixtureHelpers.fixture("/fixtures/model/profile/userProfile.json");
 }
