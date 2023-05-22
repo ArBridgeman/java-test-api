@@ -2,18 +2,21 @@ package com.spotlight.platform.userprofile.api.web.resources;
 
 import com.spotlight.platform.userprofile.api.core.profile.UserProfileService;
 import com.spotlight.platform.userprofile.api.model.profile.UserProfile;
+import com.spotlight.platform.userprofile.api.model.profile.UserProfileChange;
+import com.spotlight.platform.userprofile.api.model.profile.primitives.UserChangeType;
 import com.spotlight.platform.userprofile.api.model.profile.primitives.UserId;
+import com.spotlight.platform.userprofile.api.model.profile.primitives.UserProfilePropertyName;
+import com.spotlight.platform.userprofile.api.model.profile.primitives.UserProfilePropertyValue;
+
+import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 
-@Path("/users/{userId}")
+@Path("/users")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class UserResource {
@@ -25,9 +28,27 @@ public class UserResource {
         this.userProfileService = userProfileService;
     }
 
-    @Path("profile")
+    @Path("{userId}/profile")
     @GET
     public UserProfile getUserProfile(@Valid @PathParam("userId") UserId userId) {
         return userProfileService.get(userId);
+    }
+
+    @Path("{userId}/update/{userChangeType}")
+    @POST
+    public void updateUserProfile(
+            @Valid @PathParam("userId") UserId userId,
+            @PathParam("userChangeType") UserChangeType userChangeType,
+            Map<UserProfilePropertyName, UserProfilePropertyValue> userProfileProperties) {
+        UserProfileChange userProfileChange =
+                new UserProfileChange(userId, userChangeType, userProfileProperties);
+        userProfileService.update(userProfileChange);
+    }
+
+    // Might prefer to separate out bulk vs individual operations into different classes
+    @Path("update")
+    @POST
+    public void updateUserProfiles(@Valid List<UserProfileChange> userProfileChanges) {
+        userProfileChanges.forEach(userProfileService::update);
     }
 }

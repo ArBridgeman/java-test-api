@@ -1,11 +1,10 @@
 package com.spotlight.platform.userprofile.api.core.profile;
 
-import static com.spotlight.platform.userprofile.api.model.profile.primitives.UserChangeType.*;
-
 import com.spotlight.platform.userprofile.api.core.exceptions.EntityNotFoundException;
 import com.spotlight.platform.userprofile.api.core.profile.persistence.UserProfileDao;
 import com.spotlight.platform.userprofile.api.model.profile.UserProfile;
 import com.spotlight.platform.userprofile.api.model.profile.UserProfileChange;
+import com.spotlight.platform.userprofile.api.model.profile.primitives.UserChangeType;
 import com.spotlight.platform.userprofile.api.model.profile.primitives.UserId;
 import com.spotlight.platform.userprofile.api.model.profile.primitives.UserProfilePropertyName;
 import com.spotlight.platform.userprofile.api.model.profile.primitives.UserProfilePropertyValue;
@@ -15,7 +14,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import javax.el.MethodNotFoundException;
 import javax.inject.Inject;
 
 public class UserProfileService {
@@ -51,5 +49,11 @@ public class UserProfileService {
         profileProperties.putAll(userProfileChange.userProfileProperties());
 
         userProfileDao.put(new UserProfile(userId, Instant.now(), profileProperties));
+    }
+
+    public void update(UserProfileChange userProfileChange) {
+        if (userProfileChange.userChangeType() == UserChangeType.REPLACE) {
+            replace(userProfileChange);
+        }
     }
 }

@@ -13,8 +13,8 @@ import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import com.spotlight.platform.userprofile.api.core.profile.persistence.UserProfileDao;
 import com.spotlight.platform.userprofile.api.model.profile.UserProfile;
-import com.spotlight.platform.userprofile.api.model.profile.primitives.UserId;
-import com.spotlight.platform.userprofile.api.model.profile.primitives.UserProfileFixtures;
+import com.spotlight.platform.userprofile.api.model.profile.UserProfileChange;
+import com.spotlight.platform.userprofile.api.model.profile.primitives.*;
 import com.spotlight.platform.userprofile.api.web.UserProfileApiApplication;
 
 import org.eclipse.jetty.http.HttpStatus;
@@ -29,7 +29,11 @@ import org.junit.jupiter.api.parallel.ExecutionMode;
 import ru.vyarus.dropwizard.guice.test.ClientSupport;
 import ru.vyarus.dropwizard.guice.test.jupiter.ext.TestDropwizardAppExtension;
 
+import java.util.List;
 import java.util.Optional;
+
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.core.MediaType;
 
 @Execution(ExecutionMode.SAME_THREAD)
 class UserResourceIntegrationTest {
@@ -120,6 +124,140 @@ class UserResourceIntegrationTest {
                             .get();
 
             assertThat(response.getStatus()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR_500);
+        }
+    }
+
+    @Nested
+    @DisplayName("updateUserProfile")
+    class UpdateUserProfile {
+        private static final String USER_ID_PATH_PARAM = "userId";
+        private static final String USER_CHANGE_TYPE = "userChangeType";
+        private static final String URL =
+                "/users/{%s}/update/{%s}".formatted(USER_ID_PATH_PARAM, USER_CHANGE_TYPE);
+
+        @Test
+        void userWithValidUserChangeType_returns204(
+                ClientSupport client, UserProfileDao userProfileDao) {
+            when(userProfileDao.get(any(UserId.class)))
+                    .thenReturn(Optional.of(UserProfileFixtures.USER_PROFILE));
+
+            var response =
+                    client.targetRest()
+                            .path(URL)
+                            .resolveTemplate(USER_ID_PATH_PARAM, UserProfileFixtures.USER_ID)
+                            .resolveTemplate(USER_CHANGE_TYPE, UserChangeType.REPLACE.toString())
+                            .request()
+                            .post(
+                                    Entity.entity(
+                                            UserProfileChangeFixture.REPLACED_PROFILE_PROPERTY,
+                                            MediaType.APPLICATION_JSON_TYPE));
+            assertThat(response.getStatus()).isEqualTo(HttpStatus.NO_CONTENT_204);
+        }
+
+        @Test
+        void userWithInvalidUserChangeType_returns400(
+                ClientSupport client, UserProfileDao userProfileDao) {
+            when(userProfileDao.get(any(UserId.class)))
+                    .thenReturn(Optional.of(UserProfileFixtures.USER_PROFILE));
+
+            var response =
+                    client.targetRest()
+                            .path(URL)
+                            .resolveTemplate(USER_ID_PATH_PARAM, UserProfileFixtures.USER_ID)
+                            .resolveTemplate(USER_CHANGE_TYPE, "do_something_undefined")
+                            .request()
+                            .post(
+                                    Entity.entity(
+                                            UserProfileChangeFixture.REPLACED_PROFILE_PROPERTY,
+                                            MediaType.APPLICATION_JSON_TYPE));
+            assertThat(response.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST_400);
+        }
+
+        @Test
+        void nonExistingUserWithValidUserChangeType_returns204(
+                ClientSupport client, UserProfileDao userProfileDao) {
+            when(userProfileDao.get(any(UserId.class))).thenReturn(Optional.empty());
+
+            var response =
+                    client.targetRest()
+                            .path(URL)
+                            .resolveTemplate(USER_ID_PATH_PARAM, UserProfileFixtures.USER_ID)
+                            .resolveTemplate(USER_CHANGE_TYPE, UserChangeType.REPLACE.toString())
+                            .request()
+                            .post(
+                                    Entity.entity(
+                                            UserProfileChangeFixture.REPLACED_PROFILE_PROPERTY,
+                                            MediaType.APPLICATION_JSON_TYPE));
+            assertThat(response.getStatus()).isEqualTo(HttpStatus.NO_CONTENT_204);
+        }
+
+        @Test
+        void invalidUser_returns400(ClientSupport client) {
+            var response =
+                    client.targetRest()
+                            .path(URL)
+                            .resolveTemplate(
+                                    USER_ID_PATH_PARAM, UserProfileFixtures.INVALID_USER_ID)
+                            .resolveTemplate(USER_CHANGE_TYPE, UserChangeType.REPLACE.toString())
+                            .request()
+                            .post(
+                                    Entity.entity(
+                                            UserProfileChangeFixture.REPLACED_PROFILE_PROPERTY,
+                                            MediaType.APPLICATION_JSON_TYPE));
+
+            assertThat(response.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST_400);
+        }
+
+        @Test
+        void unhandledExceptionOccurred_returns500(
+                ClientSupport client, UserProfileDao userProfileDao) {
+            when(userProfileDao.get(any(UserId.class)))
+                    .thenThrow(new RuntimeException("Some unhandled exception"));
+
+            var response =
+                    client.targetRest()
+                            .path(URL)
+                            .resolveTemplate(USER_ID_PATH_PARAM, UserProfileFixtures.USER_ID)
+                            .resolveTemplate(USER_CHANGE_TYPE, UserChangeType.REPLACE.toString())
+                            .request()
+                            .post(
+                                    Entity.entity(
+                                            UserProfileChangeFixture.REPLACED_PROFILE_PROPERTY,
+                                            MediaType.APPLICATION_JSON_TYPE));
+
+            assertThat(response.getStatus()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR_500);
+        }
+    }
+
+    @Nested
+    @DisplayName("updateUserProfiles")
+    class UpdateUserProfiles {
+        private static final String URL = "/users/update/";
+        private static final List<UserProfileChange> userProfileChangeWithReplaces =
+                List.of(
+                        UserProfileChangeFixture.USER_PROFILE_CHANGE,
+                        new UserProfileChange(
+                                UserProfileFixtures.NON_EXISTING_USER_ID,
+                                UserChangeType.REPLACE,
+                                UserProfileChangeFixture.REPLACED_PROFILE_PROPERTY));
+
+        @Test
+        void usersWithValidUserChangeTypes_areSuccessful(
+                ClientSupport client, UserProfileDao userProfileDao) {
+            when(userProfileDao.get(UserProfileFixtures.USER_ID))
+                    .thenReturn(Optional.of(UserProfileFixtures.USER_PROFILE));
+            when(userProfileDao.get(UserProfileFixtures.NON_EXISTING_USER_ID))
+                    .thenReturn(Optional.empty());
+
+            var response =
+                    client.targetRest()
+                            .path(URL)
+                            .request()
+                            .post(
+                                    Entity.entity(
+                                            userProfileChangeWithReplaces,
+                                            MediaType.APPLICATION_JSON_TYPE));
+            assertThat(response.getStatus()).isEqualTo(HttpStatus.NO_CONTENT_204);
         }
     }
 }

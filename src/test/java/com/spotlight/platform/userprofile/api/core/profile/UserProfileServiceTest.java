@@ -132,4 +132,23 @@ class UserProfileServiceTest {
                     .isEqualTo(UPDATED_USER_PROFILE);
         }
     }
+
+    @Nested
+    @DisplayName("update")
+    class Update {
+
+        private static final UserProfileService userProfileServiceMock =
+                mock(UserProfileService.class);
+
+        @Test
+        void updateWithReplace_worksAsExpected() {
+            when(userProfileDaoMock.get(any(UserId.class)))
+                    .thenReturn(Optional.of(UserProfileFixtures.USER_PROFILE));
+            doCallRealMethod().when(userProfileServiceMock).update(any(UserProfileChange.class));
+
+            userProfileServiceMock.update(UserProfileChangeFixture.USER_PROFILE_CHANGE);
+
+            verify(userProfileServiceMock).replace(UserProfileChangeFixture.USER_PROFILE_CHANGE);
+        }
+    }
 }
