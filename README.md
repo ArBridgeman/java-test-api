@@ -74,7 +74,7 @@ There is a project which is set up in the following way:
 * [dropwizard-guicey](https://github.com/xvik/dropwizard-guicey) which brings [Guice](https://github.com/google/guice) power to Dropwizard
 * [JUnit 5](https://junit.org/junit5/), [Mockito](https://site.mockito.org/), [AssertJ](https://assertj.github.io/doc/)
   and [JsonUnit](https://github.com/lukas-krecan/JsonUnit#assertj-integration)
-* [GitHub action](https://docs.github.com/en/actions) to build, run checks and tests
+* [GitHub action](https://docs.github.com/en/actions) to build, run checks, and tests
 
 These parts of the application are already implemented:
 
