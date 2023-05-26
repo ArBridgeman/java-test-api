@@ -107,7 +107,7 @@ class UserResourceIntegrationTest {
         }
 
         @Test
-        void unhandledExceptionOccured_returns500(
+        void unhandledExceptionOccurred_returns500(
                 ClientSupport client, UserProfileDao userProfileDao) {
             when(userProfileDao.get(any(UserId.class)))
                     .thenThrow(new RuntimeException("Some unhandled exception"));
