@@ -53,7 +53,7 @@ We foresee the following command types needed from the start and more types adde
   ```
 
 Multiple applications generate commands to update the user profile and send them to User Profile API over HTTP. One example of such
-applications is a streaming application that listens to the stream of user activity events and sent the command when certain criteria are
+applications is a streaming application that listens to the stream of user activity events and sends the command when certain criteria are
 met. For example, for the user property called `numberOfLogins`, the streaming application can listen to `login` events and send
 an `increment` command to User Profile API when such an event occurs.
 
@@ -74,7 +74,7 @@ There is a project which is set up in the following way:
 * [dropwizard-guicey](https://github.com/xvik/dropwizard-guicey) which brings [Guice](https://github.com/google/guice) power to Dropwizard
 * [JUnit 5](https://junit.org/junit5/), [Mockito](https://site.mockito.org/), [AssertJ](https://assertj.github.io/doc/)
   and [JsonUnit](https://github.com/lukas-krecan/JsonUnit#assertj-integration)
-* [GitHub action](https://docs.github.com/en/actions) to build, run checks and tests
+* [GitHub action](https://docs.github.com/en/actions) to build, run checks, and tests
 
 These parts of the application are already implemented:
 
