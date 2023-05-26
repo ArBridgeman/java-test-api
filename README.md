@@ -53,7 +53,7 @@ We foresee the following command types needed from the start and more types adde
   ```
 
 Multiple applications generate commands to update the user profile and send them to User Profile API over HTTP. One example of such
-applications is a streaming application that listens to the stream of user activity events and sent the command when certain criteria are
+applications is a streaming application that listens to the stream of user activity events and sends the command when certain criteria are
 met. For example, for the user property called `numberOfLogins`, the streaming application can listen to `login` events and send
 an `increment` command to User Profile API when such an event occurs.
 
