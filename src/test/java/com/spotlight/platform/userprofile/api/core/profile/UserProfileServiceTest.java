@@ -97,20 +97,14 @@ class UserProfileServiceTest {
                 userProfileService.replace(userProfileChange);
             }
 
-            ArgumentCaptor<UserProfile> myCaptor = ArgumentCaptor.forClass(UserProfile.class);
-            verify(userProfileDaoMock).put(myCaptor.capture());
-
             Map<UserProfilePropertyName, UserProfilePropertyValue> allProperties = new HashMap<>();
             allProperties.putAll(UserProfileFixtures.USER_PROFILE.userProfileProperties());
             allProperties.putAll(newProfileProperty);
-            UserProfile updatedUserProfile =
-                    new UserProfile(
-                            UserProfileFixtures.USER_ID,
-                            UserProfileFixtures.LATEST_UPDATE_TIMESTAMP,
-                            allProperties);
-            assertThat(myCaptor.getValue())
-                    .usingRecursiveComparison()
-                    .isEqualTo(updatedUserProfile);
+
+            compareStubToExpectedUserProfile(new UserProfile(
+                    UserProfileFixtures.USER_ID,
+                    UserProfileFixtures.LATEST_UPDATE_TIMESTAMP,
+                    allProperties));
         }
 
         @Test
@@ -124,12 +118,7 @@ class UserProfileServiceTest {
                 userProfileService.replace(UserProfileChangeFixture.USER_PROFILE_CHANGE);
             }
 
-            ArgumentCaptor<UserProfile> myCaptor = ArgumentCaptor.forClass(UserProfile.class);
-            verify(userProfileDaoMock).put(myCaptor.capture());
-
-            assertThat(myCaptor.getValue())
-                    .usingRecursiveComparison()
-                    .isEqualTo(UPDATED_USER_PROFILE);
+            compareStubToExpectedUserProfile(UPDATED_USER_PROFILE);
         }
     }
 
@@ -151,4 +140,14 @@ class UserProfileServiceTest {
             verify(userProfileServiceMock).replace(UserProfileChangeFixture.USER_PROFILE_CHANGE);
         }
     }
+
+    private void compareStubToExpectedUserProfile(UserProfile expectedUserProfile) {
+        ArgumentCaptor<UserProfile> captor = ArgumentCaptor.forClass(UserProfile.class);
+        verify(userProfileDaoMock).put(captor.capture());
+
+        assertThat(captor.getValue())
+                .usingRecursiveComparison()
+                .isEqualTo(expectedUserProfile);
+    }
+
 }
