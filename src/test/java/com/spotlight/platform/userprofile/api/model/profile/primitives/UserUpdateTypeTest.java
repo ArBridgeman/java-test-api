@@ -37,6 +37,7 @@ class UserUpdateTypeTest {
     private static Stream<Arguments> provideParameters() {
         return Stream.of(
                 Arguments.of(UserUpdateType.REPLACE, "replace"),
-                Arguments.of(UserUpdateType.INCREMENT, "increment"));
+                Arguments.of(UserUpdateType.INCREMENT, "increment"),
+                Arguments.of(UserUpdateType.COLLECT, "collect"));
     }
 }

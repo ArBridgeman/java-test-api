@@ -6,7 +6,8 @@ import com.spotlight.platform.userprofile.api.core.exceptions.EntityNotFoundExce
 
 public enum UserUpdateType {
     REPLACE("replace"),
-    INCREMENT("increment");
+    INCREMENT("increment"),
+    COLLECT("collect");
 
     private final String value;
 
