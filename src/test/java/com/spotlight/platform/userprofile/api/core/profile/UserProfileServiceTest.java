@@ -17,6 +17,7 @@ import org.mockito.MockedStatic;
 
 import java.time.Instant;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -159,6 +160,8 @@ class UserProfileServiceTest {
                             allProperties));
         }
 
+        // Worthwhile to test for other types?
+        // Or rather mock with thrown exception due to UserProfilePropertyValueTest?
         @Test
         void incrementCannotCastToInt_throwException() {
             when(userProfileDaoMock.get(any(UserId.class)))
@@ -192,6 +195,96 @@ class UserProfileServiceTest {
                             UserProfileFixtures.USER_ID,
                             UserProfileFixtures.LATEST_UPDATE_TIMESTAMP,
                             UserProfileUpdateFixture.INCREMENT_PROFILE_PROPERTY));
+        }
+    }
+
+    @Nested
+    @DisplayName("collect")
+    class Collect {
+        @Test
+        void collectExistingProperty_updatesValue() {
+            UserProfile userProfile =
+                    new UserProfile(
+                            UserProfileFixtures.USER_ID,
+                            UserProfileFixtures.LAST_UPDATE_TIMESTAMP,
+                            UserProfileUpdateFixture.getUserProfileProperty(
+                                    "property3", List.of("shield")));
+
+            when(userProfileDaoMock.get(any(UserId.class))).thenReturn(Optional.of(userProfile));
+
+            fixInstantNow(
+                    () ->
+                            userProfileService.collect(
+                                    UserProfileUpdateFixture.COLLECT_USER_PROFILE_UPDATE));
+
+            compareStubToExpectedUserProfile(
+                    new UserProfile(
+                            UserProfileFixtures.USER_ID,
+                            UserProfileFixtures.LATEST_UPDATE_TIMESTAMP,
+                            UserProfileUpdateFixture.getUserProfileProperty(
+                                    "property3", List.of("shield", "sword"))));
+        }
+
+        @Test
+        void collectNewProperty_addsValue() {
+            when(userProfileDaoMock.get(any(UserId.class)))
+                    .thenReturn(Optional.of(UserProfileFixtures.USER_PROFILE));
+
+            fixInstantNow(
+                    () ->
+                            userProfileService.collect(
+                                    new UserProfileUpdate(
+                                            UserProfileFixtures.USER_ID,
+                                            UserUpdateType.INCREMENT,
+                                            UserProfileUpdateFixture.COLLECT_PROFILE_PROPERTY)));
+
+            Map<UserProfilePropertyName, UserProfilePropertyValue> allProperties = new HashMap<>();
+            allProperties.putAll(UserProfileFixtures.USER_PROFILE.userProfileProperties());
+            allProperties.putAll(UserProfileUpdateFixture.COLLECT_PROFILE_PROPERTY);
+
+            compareStubToExpectedUserProfile(
+                    new UserProfile(
+                            UserProfileFixtures.USER_ID,
+                            UserProfileFixtures.LATEST_UPDATE_TIMESTAMP,
+                            allProperties));
+        }
+
+        // Worthwhile to test for other types?
+        // Or rather mock with thrown exception due to UserProfilePropertyValueTest?
+        @Test
+        void collectCannotCastToList_throwException() {
+            when(userProfileDaoMock.get(any(UserId.class)))
+                    .thenReturn(Optional.of(UserProfileFixtures.USER_PROFILE));
+
+            UserProfileUpdate UserProfileUpdate =
+                    new UserProfileUpdate(
+                            UserProfileFixtures.USER_ID,
+                            UserUpdateType.COLLECT,
+                            UserProfileUpdateFixture.getUserProfileProperty(
+                                    "property2", "not_a_list"));
+
+            fixInstantNow(
+                    () ->
+                            assertThatThrownBy(
+                                    () -> userProfileService.collect(UserProfileUpdate))
+                                    .isExactlyInstanceOf(ClassCastException.class));
+
+        }
+
+        @Test
+        void collectForNonExistingUser_savesNewProfile() {
+            when(userProfileDaoMock.get(any(UserId.class))).thenReturn(Optional.empty());
+
+            fixInstantNow(
+                    () ->
+                            userProfileService.collect(
+                                    UserProfileUpdateFixture.COLLECT_USER_PROFILE_UPDATE));
+
+            compareStubToExpectedUserProfile(
+                    new UserProfile(
+                            UserProfileFixtures.USER_ID,
+                            UserProfileFixtures.LATEST_UPDATE_TIMESTAMP,
+                            UserProfileUpdateFixture.COLLECT_PROFILE_PROPERTY));
         }
     }
 

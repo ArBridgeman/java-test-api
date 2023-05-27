@@ -70,4 +70,36 @@ class UserProfilePropertyValueTest {
                     .isExactlyInstanceOf(ClassCastException.class);
         }
     }
+
+    @Nested
+    @DisplayName("collect")
+    class Collect {
+        private static final UserProfilePropertyValue currentList =
+                UserProfilePropertyValue.valueOf(LIST_VALUE);
+
+        @Test
+        void collect_worksCorrectly() {
+            assertThat(currentList.collect(UserProfilePropertyValue.valueOf(List.of("three"))))
+                    .isEqualTo(UserProfilePropertyValue.valueOf(List.of("one", "two", "three")));
+        }
+
+        @Test
+        void collect_throwsException() {
+            assertThatThrownBy(
+                            () ->
+                                    currentList.collect(
+                                            UserProfilePropertyValue.valueOf(STRING_VALUE)))
+                    .isExactlyInstanceOf(ClassCastException.class);
+            assertThatThrownBy(
+                            () ->
+                                    currentList.collect(
+                                            UserProfilePropertyValue.valueOf(DOUBLE_VALUE)))
+                    .isExactlyInstanceOf(ClassCastException.class);
+            assertThatThrownBy(
+                            () ->
+                                    currentList.collect(
+                                            UserProfilePropertyValue.valueOf(INTEGER_VALUE)))
+                    .isExactlyInstanceOf(ClassCastException.class);
+        }
+    }
 }

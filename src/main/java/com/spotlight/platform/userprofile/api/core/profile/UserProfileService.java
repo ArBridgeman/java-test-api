@@ -10,6 +10,7 @@ import com.spotlight.platform.userprofile.api.model.profile.primitives.UserProfi
 
 import java.time.Instant;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -61,6 +62,21 @@ public class UserProfileService {
                     profileProperties.getOrDefault(
                             entry.getKey(), UserProfilePropertyValue.valueOf(0));
             profileProperties.put(entry.getKey(), currentValue.increment(entry.getValue()));
+        }
+        userProfileDao.put(new UserProfile(userId, Instant.now(), profileProperties));
+    }
+
+    public void collect(UserProfileUpdate userProfileUpdate) {
+        UserId userId = userProfileUpdate.userId();
+        Map<UserProfilePropertyName, UserProfilePropertyValue> profileProperties =
+                getProfileProperties(userId);
+
+        for (Map.Entry<UserProfilePropertyName, UserProfilePropertyValue> entry :
+                userProfileUpdate.userProfileProperties().entrySet()) {
+            UserProfilePropertyValue currentValue =
+                    profileProperties.getOrDefault(
+                            entry.getKey(), UserProfilePropertyValue.valueOf(List.of()));
+            profileProperties.put(entry.getKey(), currentValue.collect(entry.getValue()));
         }
         userProfileDao.put(new UserProfile(userId, Instant.now(), profileProperties));
     }
