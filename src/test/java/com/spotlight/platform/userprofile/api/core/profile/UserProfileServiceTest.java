@@ -78,17 +78,17 @@ class UserProfileServiceTest {
             when(userProfileDaoMock.get(any(UserId.class)))
                     .thenReturn(Optional.of(UserProfileFixtures.USER_PROFILE));
 
-            Map<UserProfilePropertyName, UserProfilePropertyValue> newProfileProperty =
+            Map<UserProfilePropertyName, UserProfilePropertyValue> replaceProperty2 =
                     UserProfileChangeFixture.getUserProfileProperty("property2", "property2Value");
             UserProfileChange userProfileChange =
                     new UserProfileChange(
-                            UserProfileFixtures.USER_ID, UserChangeType.REPLACE, newProfileProperty);
+                            UserProfileFixtures.USER_ID, UserChangeType.REPLACE, replaceProperty2);
 
             fixInstantNow(() -> userProfileService.replace(userProfileChange));
 
             Map<UserProfilePropertyName, UserProfilePropertyValue> allProperties = new HashMap<>();
             allProperties.putAll(UserProfileFixtures.USER_PROFILE.userProfileProperties());
-            allProperties.putAll(newProfileProperty);
+            allProperties.putAll(replaceProperty2);
 
             compareStubToExpectedUserProfile(
                     new UserProfile(
