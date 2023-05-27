@@ -14,12 +14,14 @@ public class UserProfileUpdateFixture {
                 UserProfilePropertyValue.valueOf(propertyValue));
     }
 
+    // As we add more methods, we might want these broken up into separate fixture files.
+    // Alternately, we might want some smarter way to do.
     public static final Map<UserProfilePropertyName, UserProfilePropertyValue>
-            REPLACED_PROFILE_PROPERTY = getUserProfileProperty("property1", "newValue");
+            REPLACE_PROFILE_PROPERTY = getUserProfileProperty("property1", "newValue");
 
-    public static final UserProfileUpdate USER_PROFILE_CHANGE =
+    public static final UserProfileUpdate REPLACE_USER_PROFILE_UPDATE =
             new UserProfileUpdate(
-                    UserProfileFixtures.USER_ID, UserUpdateType.REPLACE, REPLACED_PROFILE_PROPERTY);
+                    UserProfileFixtures.USER_ID, UserUpdateType.REPLACE, REPLACE_PROFILE_PROPERTY);
 
     public static final String SERIALIZED_USER_PROFILE_UPDATE =
             FixtureHelpers.fixture("/fixtures/model/profile/userProfileUpdate.json");

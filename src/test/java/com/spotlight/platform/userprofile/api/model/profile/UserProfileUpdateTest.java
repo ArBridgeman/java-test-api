@@ -10,7 +10,7 @@ class UserProfileUpdateTest {
 
     @Test
     void serialization_worksAsExpected() {
-        assertThatJson(UserProfileUpdateFixture.USER_PROFILE_CHANGE)
+        assertThatJson(UserProfileUpdateFixture.REPLACE_USER_PROFILE_UPDATE)
                 .isEqualTo(UserProfileUpdateFixture.SERIALIZED_USER_PROFILE_UPDATE);
     }
 }

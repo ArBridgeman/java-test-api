@@ -54,7 +54,7 @@ class UserProfileServiceTest {
                 new UserProfile(
                         UserProfileFixtures.USER_ID,
                         UserProfileFixtures.LATEST_UPDATE_TIMESTAMP,
-                        UserProfileUpdateFixture.REPLACED_PROFILE_PROPERTY);
+                        UserProfileUpdateFixture.REPLACE_PROFILE_PROPERTY);
 
         @Test
         void replaceExistingProperty_updatesValue() {
@@ -62,7 +62,9 @@ class UserProfileServiceTest {
                     .thenReturn(Optional.of(UserProfileFixtures.USER_PROFILE));
 
             fixInstantNow(
-                    () -> userProfileService.replace(UserProfileUpdateFixture.USER_PROFILE_CHANGE));
+                    () ->
+                            userProfileService.replace(
+                                    UserProfileUpdateFixture.REPLACE_USER_PROFILE_UPDATE));
 
             ArgumentCaptor<UserProfile> myCaptor = ArgumentCaptor.forClass(UserProfile.class);
             verify(userProfileDaoMock).put(myCaptor.capture());
@@ -101,7 +103,9 @@ class UserProfileServiceTest {
             when(userProfileDaoMock.get(any(UserId.class))).thenReturn(Optional.empty());
 
             fixInstantNow(
-                    () -> userProfileService.replace(UserProfileUpdateFixture.USER_PROFILE_CHANGE));
+                    () ->
+                            userProfileService.replace(
+                                    UserProfileUpdateFixture.REPLACE_USER_PROFILE_UPDATE));
 
             compareStubToExpectedUserProfile(UPDATED_USER_PROFILE);
         }
@@ -120,9 +124,10 @@ class UserProfileServiceTest {
                     .thenReturn(Optional.of(UserProfileFixtures.USER_PROFILE));
             doCallRealMethod().when(userProfileServiceMock).update(any(UserProfileUpdate.class));
 
-            userProfileServiceMock.update(UserProfileUpdateFixture.USER_PROFILE_CHANGE);
+            userProfileServiceMock.update(UserProfileUpdateFixture.REPLACE_USER_PROFILE_UPDATE);
 
-            verify(userProfileServiceMock).replace(UserProfileUpdateFixture.USER_PROFILE_CHANGE);
+            verify(userProfileServiceMock)
+                    .replace(UserProfileUpdateFixture.REPLACE_USER_PROFILE_UPDATE);
         }
     }
 

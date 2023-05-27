@@ -149,7 +149,7 @@ class UserResourceIntegrationTest {
                             .request()
                             .post(
                                     Entity.entity(
-                                            UserProfileUpdateFixture.REPLACED_PROFILE_PROPERTY,
+                                            UserProfileUpdateFixture.REPLACE_PROFILE_PROPERTY,
                                             MediaType.APPLICATION_JSON_TYPE));
             assertThat(response.getStatus()).isEqualTo(HttpStatus.NO_CONTENT_204);
         }
@@ -168,7 +168,7 @@ class UserResourceIntegrationTest {
                             .request()
                             .post(
                                     Entity.entity(
-                                            UserProfileUpdateFixture.REPLACED_PROFILE_PROPERTY,
+                                            UserProfileUpdateFixture.REPLACE_PROFILE_PROPERTY,
                                             MediaType.APPLICATION_JSON_TYPE));
             assertThat(response.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST_400);
         }
@@ -186,7 +186,7 @@ class UserResourceIntegrationTest {
                             .request()
                             .post(
                                     Entity.entity(
-                                            UserProfileUpdateFixture.REPLACED_PROFILE_PROPERTY,
+                                            UserProfileUpdateFixture.REPLACE_PROFILE_PROPERTY,
                                             MediaType.APPLICATION_JSON_TYPE));
             assertThat(response.getStatus()).isEqualTo(HttpStatus.NO_CONTENT_204);
         }
@@ -202,7 +202,7 @@ class UserResourceIntegrationTest {
                             .request()
                             .post(
                                     Entity.entity(
-                                            UserProfileUpdateFixture.REPLACED_PROFILE_PROPERTY,
+                                            UserProfileUpdateFixture.REPLACE_PROFILE_PROPERTY,
                                             MediaType.APPLICATION_JSON_TYPE));
 
             assertThat(response.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST_400);
@@ -222,7 +222,7 @@ class UserResourceIntegrationTest {
                             .request()
                             .post(
                                     Entity.entity(
-                                            UserProfileUpdateFixture.REPLACED_PROFILE_PROPERTY,
+                                            UserProfileUpdateFixture.REPLACE_PROFILE_PROPERTY,
                                             MediaType.APPLICATION_JSON_TYPE));
 
             assertThat(response.getStatus()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR_500);
@@ -235,11 +235,11 @@ class UserResourceIntegrationTest {
         private static final String URL = "/users/update/";
         private static final List<UserProfileUpdate> USER_PROFILE_UPDATE_WITH_REPLACES =
                 List.of(
-                        UserProfileUpdateFixture.USER_PROFILE_CHANGE,
+                        UserProfileUpdateFixture.REPLACE_USER_PROFILE_UPDATE,
                         new UserProfileUpdate(
                                 UserProfileFixtures.NON_EXISTING_USER_ID,
                                 UserUpdateType.REPLACE,
-                                UserProfileUpdateFixture.REPLACED_PROFILE_PROPERTY));
+                                UserProfileUpdateFixture.REPLACE_PROFILE_PROPERTY));
 
         @Test
         void usersWithValidUserUpdateTypes_areSuccessful(
