@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 class UserProfileTest {
 
     @Test
-    void serialization_WorksAsExpected() {
+    void serialization_worksAsExpected() {
         assertThatJson(UserProfileFixtures.USER_PROFILE)
                 .isEqualTo(UserProfileFixtures.SERIALIZED_USER_PROFILE);
     }
