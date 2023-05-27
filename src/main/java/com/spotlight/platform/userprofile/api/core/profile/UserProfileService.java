@@ -51,6 +51,21 @@ public class UserProfileService {
         userProfileDao.put(new UserProfile(userId, Instant.now(), profileProperties));
     }
 
+    public void increment(UserProfileUpdate userProfileUpdate) {
+        UserId userId = userProfileUpdate.userId();
+        Map<UserProfilePropertyName, UserProfilePropertyValue> profileProperties =
+                getProfileProperties(userId);
+
+        for (Map.Entry<UserProfilePropertyName, UserProfilePropertyValue> entry :
+                userProfileUpdate.userProfileProperties().entrySet()) {
+            UserProfilePropertyValue currentValue =
+                    profileProperties.getOrDefault(
+                            entry.getKey(), UserProfilePropertyValue.valueOf(0));
+            profileProperties.put(entry.getKey(), currentValue.increment(entry.getValue()));
+        }
+        userProfileDao.put(new UserProfile(userId, Instant.now(), profileProperties));
+    }
+
     public void update(UserProfileUpdate userProfileUpdate) {
         if (userProfileUpdate.userUpdateType() == UserUpdateType.REPLACE) {
             replace(userProfileUpdate);

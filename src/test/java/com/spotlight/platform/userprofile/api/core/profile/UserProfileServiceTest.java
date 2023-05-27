@@ -112,6 +112,90 @@ class UserProfileServiceTest {
     }
 
     @Nested
+    @DisplayName("increment")
+    class Increment {
+        @Test
+        void incrementExistingIntegerProperty_updatesValue() {
+            UserProfile userProfile =
+                    new UserProfile(
+                            UserProfileFixtures.USER_ID,
+                            UserProfileFixtures.LAST_UPDATE_TIMESTAMP,
+                            UserProfileUpdateFixture.getUserProfileProperty("property2", -10));
+            when(userProfileDaoMock.get(any(UserId.class))).thenReturn(Optional.of(userProfile));
+
+            fixInstantNow(
+                    () ->
+                            userProfileService.increment(
+                                    UserProfileUpdateFixture.INCREMENT_USER_PROFILE_UPDATE));
+
+            compareStubToExpectedUserProfile(
+                    new UserProfile(
+                            UserProfileFixtures.USER_ID,
+                            UserProfileFixtures.LATEST_UPDATE_TIMESTAMP,
+                            UserProfileUpdateFixture.getUserProfileProperty("property2", -8)));
+        }
+
+        @Test
+        void incrementNewProperty_addsValue() {
+            when(userProfileDaoMock.get(any(UserId.class)))
+                    .thenReturn(Optional.of(UserProfileFixtures.USER_PROFILE));
+
+            fixInstantNow(
+                    () ->
+                            userProfileService.increment(
+                                    new UserProfileUpdate(
+                                            UserProfileFixtures.USER_ID,
+                                            UserUpdateType.INCREMENT,
+                                            UserProfileUpdateFixture.INCREMENT_PROFILE_PROPERTY)));
+
+            Map<UserProfilePropertyName, UserProfilePropertyValue> allProperties = new HashMap<>();
+            allProperties.putAll(UserProfileFixtures.USER_PROFILE.userProfileProperties());
+            allProperties.putAll(UserProfileUpdateFixture.INCREMENT_PROFILE_PROPERTY);
+
+            compareStubToExpectedUserProfile(
+                    new UserProfile(
+                            UserProfileFixtures.USER_ID,
+                            UserProfileFixtures.LATEST_UPDATE_TIMESTAMP,
+                            allProperties));
+        }
+
+        @Test
+        void incrementCannotCastToInt_throwException() {
+            when(userProfileDaoMock.get(any(UserId.class)))
+                    .thenReturn(Optional.of(UserProfileFixtures.USER_PROFILE));
+
+            UserProfileUpdate UserProfileUpdate =
+                    new UserProfileUpdate(
+                            UserProfileFixtures.USER_ID,
+                            UserUpdateType.INCREMENT,
+                            UserProfileUpdateFixture.getUserProfileProperty(
+                                    "property2", "not_an_integer"));
+
+            fixInstantNow(
+                    () ->
+                            assertThatThrownBy(
+                                            () -> userProfileService.increment(UserProfileUpdate))
+                                    .isExactlyInstanceOf(ClassCastException.class));
+        }
+
+        @Test
+        void incrementForNonExistingUser_savesNewProfile() {
+            when(userProfileDaoMock.get(any(UserId.class))).thenReturn(Optional.empty());
+
+            fixInstantNow(
+                    () ->
+                            userProfileService.increment(
+                                    UserProfileUpdateFixture.INCREMENT_USER_PROFILE_UPDATE));
+
+            compareStubToExpectedUserProfile(
+                    new UserProfile(
+                            UserProfileFixtures.USER_ID,
+                            UserProfileFixtures.LATEST_UPDATE_TIMESTAMP,
+                            UserProfileUpdateFixture.INCREMENT_PROFILE_PROPERTY));
+        }
+    }
+
+    @Nested
     @DisplayName("update")
     class Update {
 

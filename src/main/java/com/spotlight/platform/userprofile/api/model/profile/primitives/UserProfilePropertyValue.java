@@ -33,4 +33,10 @@ public class UserProfilePropertyValue {
         }
         return value.equals(((UserProfilePropertyValue) obj).getValue());
     }
+
+    public UserProfilePropertyValue increment(UserProfilePropertyValue incrementValue) {
+        // Only allows for type integer in increment; may be that we support doubles, etc.
+        return UserProfilePropertyValue.valueOf(
+                (Integer) incrementValue.getValue() + (Integer) value);
+    }
 }

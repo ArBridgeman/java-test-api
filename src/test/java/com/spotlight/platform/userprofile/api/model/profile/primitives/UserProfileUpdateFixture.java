@@ -25,4 +25,13 @@ public class UserProfileUpdateFixture {
 
     public static final String SERIALIZED_USER_PROFILE_UPDATE =
             FixtureHelpers.fixture("/fixtures/model/profile/userProfileUpdate.json");
+
+    public static final Map<UserProfilePropertyName, UserProfilePropertyValue>
+            INCREMENT_PROFILE_PROPERTY = getUserProfileProperty("property2", 2);
+
+    public static final UserProfileUpdate INCREMENT_USER_PROFILE_UPDATE =
+            new UserProfileUpdate(
+                    UserProfileFixtures.USER_ID,
+                    UserUpdateType.INCREMENT,
+                    INCREMENT_PROFILE_PROPERTY);
 }
