@@ -62,12 +62,8 @@ class UserProfileServiceTest {
             when(userProfileDaoMock.get(any(UserId.class)))
                     .thenReturn(Optional.of(UserProfileFixtures.USER_PROFILE));
 
-            try (MockedStatic<Instant> mockedStatic = mockStatic(Instant.class)) {
-                mockedStatic
-                        .when(Instant::now)
-                        .thenReturn(UserProfileFixtures.LATEST_UPDATE_TIMESTAMP);
-                userProfileService.replace(UserProfileChangeFixture.USER_PROFILE_CHANGE);
-            }
+            fixInstantNow(
+                    () -> userProfileService.replace(UserProfileChangeFixture.USER_PROFILE_CHANGE));
 
             ArgumentCaptor<UserProfile> myCaptor = ArgumentCaptor.forClass(UserProfile.class);
             verify(userProfileDaoMock).put(myCaptor.capture());
@@ -86,37 +82,27 @@ class UserProfileServiceTest {
                     UserProfileChangeFixture.getUserProfileProperty("property2", "property2Value");
             UserProfileChange userProfileChange =
                     new UserProfileChange(
-                            UserProfileFixtures.USER_ID,
-                            UserChangeType.REPLACE,
-                            newProfileProperty);
+                            UserProfileFixtures.USER_ID, UserChangeType.REPLACE, newProfileProperty);
 
-            try (MockedStatic<Instant> mockedStatic = mockStatic(Instant.class)) {
-                mockedStatic
-                        .when(Instant::now)
-                        .thenReturn(UserProfileFixtures.LATEST_UPDATE_TIMESTAMP);
-                userProfileService.replace(userProfileChange);
-            }
+            fixInstantNow(() -> userProfileService.replace(userProfileChange));
 
             Map<UserProfilePropertyName, UserProfilePropertyValue> allProperties = new HashMap<>();
             allProperties.putAll(UserProfileFixtures.USER_PROFILE.userProfileProperties());
             allProperties.putAll(newProfileProperty);
 
-            compareStubToExpectedUserProfile(new UserProfile(
-                    UserProfileFixtures.USER_ID,
-                    UserProfileFixtures.LATEST_UPDATE_TIMESTAMP,
-                    allProperties));
+            compareStubToExpectedUserProfile(
+                    new UserProfile(
+                            UserProfileFixtures.USER_ID,
+                            UserProfileFixtures.LATEST_UPDATE_TIMESTAMP,
+                            allProperties));
         }
 
         @Test
         void replaceForNonExistingUser_savesNewProfile() {
             when(userProfileDaoMock.get(any(UserId.class))).thenReturn(Optional.empty());
 
-            try (MockedStatic<Instant> mockedStatic = mockStatic(Instant.class)) {
-                mockedStatic
-                        .when(Instant::now)
-                        .thenReturn(UserProfileFixtures.LATEST_UPDATE_TIMESTAMP);
-                userProfileService.replace(UserProfileChangeFixture.USER_PROFILE_CHANGE);
-            }
+            fixInstantNow(
+                    () -> userProfileService.replace(UserProfileChangeFixture.USER_PROFILE_CHANGE));
 
             compareStubToExpectedUserProfile(UPDATED_USER_PROFILE);
         }
@@ -145,9 +131,13 @@ class UserProfileServiceTest {
         ArgumentCaptor<UserProfile> captor = ArgumentCaptor.forClass(UserProfile.class);
         verify(userProfileDaoMock).put(captor.capture());
 
-        assertThat(captor.getValue())
-                .usingRecursiveComparison()
-                .isEqualTo(expectedUserProfile);
+        assertThat(captor.getValue()).usingRecursiveComparison().isEqualTo(expectedUserProfile);
     }
 
+    private void fixInstantNow(Runnable expressionToRun) {
+        try (MockedStatic<Instant> mockedStatic = mockStatic(Instant.class)) {
+            mockedStatic.when(Instant::now).thenReturn(UserProfileFixtures.LATEST_UPDATE_TIMESTAMP);
+            expressionToRun.run();
+        }
+    }
 }
