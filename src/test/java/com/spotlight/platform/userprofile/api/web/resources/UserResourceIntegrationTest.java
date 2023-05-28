@@ -13,7 +13,7 @@ import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import com.spotlight.platform.userprofile.api.core.profile.persistence.UserProfileDao;
 import com.spotlight.platform.userprofile.api.model.profile.UserProfile;
-import com.spotlight.platform.userprofile.api.model.profile.UserProfileChange;
+import com.spotlight.platform.userprofile.api.model.profile.UserProfileUpdate;
 import com.spotlight.platform.userprofile.api.model.profile.primitives.*;
 import com.spotlight.platform.userprofile.api.web.UserProfileApiApplication;
 
@@ -131,12 +131,12 @@ class UserResourceIntegrationTest {
     @DisplayName("updateUserProfile")
     class UpdateUserProfile {
         private static final String USER_ID_PATH_PARAM = "userId";
-        private static final String USER_CHANGE_TYPE = "userChangeType";
+        private static final String USER_CHANGE_TYPE = "userUpdateType";
         private static final String URL =
                 "/users/{%s}/update/{%s}".formatted(USER_ID_PATH_PARAM, USER_CHANGE_TYPE);
 
         @Test
-        void userWithValidUserChangeType_returns204(
+        void userWithValidUserUpdateType_returns204(
                 ClientSupport client, UserProfileDao userProfileDao) {
             when(userProfileDao.get(any(UserId.class)))
                     .thenReturn(Optional.of(UserProfileFixtures.USER_PROFILE));
@@ -145,17 +145,17 @@ class UserResourceIntegrationTest {
                     client.targetRest()
                             .path(URL)
                             .resolveTemplate(USER_ID_PATH_PARAM, UserProfileFixtures.USER_ID)
-                            .resolveTemplate(USER_CHANGE_TYPE, UserChangeType.REPLACE.toString())
+                            .resolveTemplate(USER_CHANGE_TYPE, UserUpdateType.REPLACE.toString())
                             .request()
                             .post(
                                     Entity.entity(
-                                            UserProfileChangeFixture.REPLACED_PROFILE_PROPERTY,
+                                            UserProfileUpdateFixture.REPLACED_PROFILE_PROPERTY,
                                             MediaType.APPLICATION_JSON_TYPE));
             assertThat(response.getStatus()).isEqualTo(HttpStatus.NO_CONTENT_204);
         }
 
         @Test
-        void userWithInvalidUserChangeType_returns400(
+        void userWithInvalidUserUpdateType_returns400(
                 ClientSupport client, UserProfileDao userProfileDao) {
             when(userProfileDao.get(any(UserId.class)))
                     .thenReturn(Optional.of(UserProfileFixtures.USER_PROFILE));
@@ -168,13 +168,13 @@ class UserResourceIntegrationTest {
                             .request()
                             .post(
                                     Entity.entity(
-                                            UserProfileChangeFixture.REPLACED_PROFILE_PROPERTY,
+                                            UserProfileUpdateFixture.REPLACED_PROFILE_PROPERTY,
                                             MediaType.APPLICATION_JSON_TYPE));
             assertThat(response.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST_400);
         }
 
         @Test
-        void nonExistingUserWithValidUserChangeType_returns204(
+        void nonExistingUserWithValidUserUpdateType_returns204(
                 ClientSupport client, UserProfileDao userProfileDao) {
             when(userProfileDao.get(any(UserId.class))).thenReturn(Optional.empty());
 
@@ -182,11 +182,11 @@ class UserResourceIntegrationTest {
                     client.targetRest()
                             .path(URL)
                             .resolveTemplate(USER_ID_PATH_PARAM, UserProfileFixtures.USER_ID)
-                            .resolveTemplate(USER_CHANGE_TYPE, UserChangeType.REPLACE.toString())
+                            .resolveTemplate(USER_CHANGE_TYPE, UserUpdateType.REPLACE.toString())
                             .request()
                             .post(
                                     Entity.entity(
-                                            UserProfileChangeFixture.REPLACED_PROFILE_PROPERTY,
+                                            UserProfileUpdateFixture.REPLACED_PROFILE_PROPERTY,
                                             MediaType.APPLICATION_JSON_TYPE));
             assertThat(response.getStatus()).isEqualTo(HttpStatus.NO_CONTENT_204);
         }
@@ -198,11 +198,11 @@ class UserResourceIntegrationTest {
                             .path(URL)
                             .resolveTemplate(
                                     USER_ID_PATH_PARAM, UserProfileFixtures.INVALID_USER_ID)
-                            .resolveTemplate(USER_CHANGE_TYPE, UserChangeType.REPLACE.toString())
+                            .resolveTemplate(USER_CHANGE_TYPE, UserUpdateType.REPLACE.toString())
                             .request()
                             .post(
                                     Entity.entity(
-                                            UserProfileChangeFixture.REPLACED_PROFILE_PROPERTY,
+                                            UserProfileUpdateFixture.REPLACED_PROFILE_PROPERTY,
                                             MediaType.APPLICATION_JSON_TYPE));
 
             assertThat(response.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST_400);
@@ -218,11 +218,11 @@ class UserResourceIntegrationTest {
                     client.targetRest()
                             .path(URL)
                             .resolveTemplate(USER_ID_PATH_PARAM, UserProfileFixtures.USER_ID)
-                            .resolveTemplate(USER_CHANGE_TYPE, UserChangeType.REPLACE.toString())
+                            .resolveTemplate(USER_CHANGE_TYPE, UserUpdateType.REPLACE.toString())
                             .request()
                             .post(
                                     Entity.entity(
-                                            UserProfileChangeFixture.REPLACED_PROFILE_PROPERTY,
+                                            UserProfileUpdateFixture.REPLACED_PROFILE_PROPERTY,
                                             MediaType.APPLICATION_JSON_TYPE));
 
             assertThat(response.getStatus()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR_500);
@@ -233,16 +233,16 @@ class UserResourceIntegrationTest {
     @DisplayName("updateUserProfiles")
     class UpdateUserProfiles {
         private static final String URL = "/users/update/";
-        private static final List<UserProfileChange> userProfileChangeWithReplaces =
+        private static final List<UserProfileUpdate> USER_PROFILE_UPDATE_WITH_REPLACES =
                 List.of(
-                        UserProfileChangeFixture.USER_PROFILE_CHANGE,
-                        new UserProfileChange(
+                        UserProfileUpdateFixture.USER_PROFILE_CHANGE,
+                        new UserProfileUpdate(
                                 UserProfileFixtures.NON_EXISTING_USER_ID,
-                                UserChangeType.REPLACE,
-                                UserProfileChangeFixture.REPLACED_PROFILE_PROPERTY));
+                                UserUpdateType.REPLACE,
+                                UserProfileUpdateFixture.REPLACED_PROFILE_PROPERTY));
 
         @Test
-        void usersWithValidUserChangeTypes_areSuccessful(
+        void usersWithValidUserUpdateTypes_areSuccessful(
                 ClientSupport client, UserProfileDao userProfileDao) {
             when(userProfileDao.get(UserProfileFixtures.USER_ID))
                     .thenReturn(Optional.of(UserProfileFixtures.USER_PROFILE));
@@ -255,7 +255,7 @@ class UserResourceIntegrationTest {
                             .request()
                             .post(
                                     Entity.entity(
-                                            userProfileChangeWithReplaces,
+                                            USER_PROFILE_UPDATE_WITH_REPLACES,
                                             MediaType.APPLICATION_JSON_TYPE));
             assertThat(response.getStatus()).isEqualTo(HttpStatus.NO_CONTENT_204);
         }

@@ -1,11 +1,11 @@
 package com.spotlight.platform.userprofile.api.model.profile.primitives;
 
 import com.spotlight.platform.helpers.FixtureHelpers;
-import com.spotlight.platform.userprofile.api.model.profile.UserProfileChange;
+import com.spotlight.platform.userprofile.api.model.profile.UserProfileUpdate;
 
 import java.util.Map;
 
-public class UserProfileChangeFixture {
+public class UserProfileUpdateFixture {
 
     public static Map<UserProfilePropertyName, UserProfilePropertyValue> getUserProfileProperty(
             String propertyName, Object propertyValue) {
@@ -17,10 +17,10 @@ public class UserProfileChangeFixture {
     public static final Map<UserProfilePropertyName, UserProfilePropertyValue>
             REPLACED_PROFILE_PROPERTY = getUserProfileProperty("property1", "newValue");
 
-    public static final UserProfileChange USER_PROFILE_CHANGE =
-            new UserProfileChange(
-                    UserProfileFixtures.USER_ID, UserChangeType.REPLACE, REPLACED_PROFILE_PROPERTY);
+    public static final UserProfileUpdate USER_PROFILE_CHANGE =
+            new UserProfileUpdate(
+                    UserProfileFixtures.USER_ID, UserUpdateType.REPLACE, REPLACED_PROFILE_PROPERTY);
 
     public static final String SERIALIZED_USER_PROFILE_CHANGE =
-            FixtureHelpers.fixture("/fixtures/model/profile/userProfileChange.json");
+            FixtureHelpers.fixture("/fixtures/model/profile/userProfileUpdate.json");
 }

@@ -1,6 +1,6 @@
 {
   "userId": "existing-user-id",
-  "userChangeType": "replace",
+  "userUpdateType": "replace",
   "userProfileProperties": {
     "property1": "newValue"
   }

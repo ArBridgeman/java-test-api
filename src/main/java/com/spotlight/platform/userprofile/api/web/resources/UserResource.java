@@ -2,11 +2,11 @@ package com.spotlight.platform.userprofile.api.web.resources;
 
 import com.spotlight.platform.userprofile.api.core.profile.UserProfileService;
 import com.spotlight.platform.userprofile.api.model.profile.UserProfile;
-import com.spotlight.platform.userprofile.api.model.profile.UserProfileChange;
-import com.spotlight.platform.userprofile.api.model.profile.primitives.UserChangeType;
+import com.spotlight.platform.userprofile.api.model.profile.UserProfileUpdate;
 import com.spotlight.platform.userprofile.api.model.profile.primitives.UserId;
 import com.spotlight.platform.userprofile.api.model.profile.primitives.UserProfilePropertyName;
 import com.spotlight.platform.userprofile.api.model.profile.primitives.UserProfilePropertyValue;
+import com.spotlight.platform.userprofile.api.model.profile.primitives.UserUpdateType;
 
 import java.util.List;
 import java.util.Map;
@@ -34,21 +34,21 @@ public class UserResource {
         return userProfileService.get(userId);
     }
 
-    @Path("{userId}/update/{userChangeType}")
+    @Path("{userId}/update/{userUpdateType}")
     @POST
     public void updateUserProfile(
             @Valid @PathParam("userId") UserId userId,
-            @PathParam("userChangeType") UserChangeType userChangeType,
+            @PathParam("userUpdateType") UserUpdateType userUpdateType,
             Map<UserProfilePropertyName, UserProfilePropertyValue> userProfileProperties) {
-        UserProfileChange userProfileChange =
-                new UserProfileChange(userId, userChangeType, userProfileProperties);
-        userProfileService.update(userProfileChange);
+        UserProfileUpdate userProfileUpdate =
+                new UserProfileUpdate(userId, userUpdateType, userProfileProperties);
+        userProfileService.update(userProfileUpdate);
     }
 
     // Might prefer to separate out bulk vs individual operations into different classes
     @Path("update")
     @POST
-    public void updateUserProfiles(@Valid List<UserProfileChange> userProfileChanges) {
-        userProfileChanges.forEach(userProfileService::update);
+    public void updateUserProfiles(@Valid List<UserProfileUpdate> userProfileUpdates) {
+        userProfileUpdates.forEach(userProfileService::update);
     }
 }

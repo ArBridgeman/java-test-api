@@ -9,7 +9,7 @@ import static org.mockito.Mockito.*;
 import com.spotlight.platform.userprofile.api.core.exceptions.EntityNotFoundException;
 import com.spotlight.platform.userprofile.api.core.profile.persistence.UserProfileDao;
 import com.spotlight.platform.userprofile.api.model.profile.UserProfile;
-import com.spotlight.platform.userprofile.api.model.profile.UserProfileChange;
+import com.spotlight.platform.userprofile.api.model.profile.UserProfileUpdate;
 import com.spotlight.platform.userprofile.api.model.profile.primitives.*;
 
 import org.junit.jupiter.api.*;
@@ -55,7 +55,7 @@ class UserProfileServiceTest {
                 new UserProfile(
                         UserProfileFixtures.USER_ID,
                         UserProfileFixtures.LATEST_UPDATE_TIMESTAMP,
-                        UserProfileChangeFixture.REPLACED_PROFILE_PROPERTY);
+                        UserProfileUpdateFixture.REPLACED_PROFILE_PROPERTY);
 
         @Test
         void replaceExistingProperty_updatesValue() {
@@ -63,7 +63,7 @@ class UserProfileServiceTest {
                     .thenReturn(Optional.of(UserProfileFixtures.USER_PROFILE));
 
             fixInstantNow(
-                    () -> userProfileService.replace(UserProfileChangeFixture.USER_PROFILE_CHANGE));
+                    () -> userProfileService.replace(UserProfileUpdateFixture.USER_PROFILE_CHANGE));
 
             ArgumentCaptor<UserProfile> myCaptor = ArgumentCaptor.forClass(UserProfile.class);
             verify(userProfileDaoMock).put(myCaptor.capture());
@@ -79,12 +79,12 @@ class UserProfileServiceTest {
                     .thenReturn(Optional.of(UserProfileFixtures.USER_PROFILE));
 
             Map<UserProfilePropertyName, UserProfilePropertyValue> replaceProperty2 =
-                    UserProfileChangeFixture.getUserProfileProperty("property2", "property2Value");
-            UserProfileChange userProfileChange =
-                    new UserProfileChange(
-                            UserProfileFixtures.USER_ID, UserChangeType.REPLACE, replaceProperty2);
+                    UserProfileUpdateFixture.getUserProfileProperty("property2", "property2Value");
+            UserProfileUpdate userProfileUpdate =
+                    new UserProfileUpdate(
+                            UserProfileFixtures.USER_ID, UserUpdateType.REPLACE, replaceProperty2);
 
-            fixInstantNow(() -> userProfileService.replace(userProfileChange));
+            fixInstantNow(() -> userProfileService.replace(userProfileUpdate));
 
             Map<UserProfilePropertyName, UserProfilePropertyValue> allProperties = new HashMap<>();
             allProperties.putAll(UserProfileFixtures.USER_PROFILE.userProfileProperties());
@@ -102,7 +102,7 @@ class UserProfileServiceTest {
             when(userProfileDaoMock.get(any(UserId.class))).thenReturn(Optional.empty());
 
             fixInstantNow(
-                    () -> userProfileService.replace(UserProfileChangeFixture.USER_PROFILE_CHANGE));
+                    () -> userProfileService.replace(UserProfileUpdateFixture.USER_PROFILE_CHANGE));
 
             compareStubToExpectedUserProfile(UPDATED_USER_PROFILE);
         }
@@ -119,11 +119,11 @@ class UserProfileServiceTest {
         void updateWithReplace_worksAsExpected() {
             when(userProfileDaoMock.get(any(UserId.class)))
                     .thenReturn(Optional.of(UserProfileFixtures.USER_PROFILE));
-            doCallRealMethod().when(userProfileServiceMock).update(any(UserProfileChange.class));
+            doCallRealMethod().when(userProfileServiceMock).update(any(UserProfileUpdate.class));
 
-            userProfileServiceMock.update(UserProfileChangeFixture.USER_PROFILE_CHANGE);
+            userProfileServiceMock.update(UserProfileUpdateFixture.USER_PROFILE_CHANGE);
 
-            verify(userProfileServiceMock).replace(UserProfileChangeFixture.USER_PROFILE_CHANGE);
+            verify(userProfileServiceMock).replace(UserProfileUpdateFixture.USER_PROFILE_CHANGE);
         }
     }
 

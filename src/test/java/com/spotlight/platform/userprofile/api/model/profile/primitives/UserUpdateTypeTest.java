@@ -9,21 +9,21 @@ import com.spotlight.platform.userprofile.api.core.exceptions.EntityNotFoundExce
 
 import org.junit.jupiter.api.Test;
 
-class UserChangeTypeTest {
+class UserUpdateTypeTest {
 
     @Test
     void serialization_worksAsExpected() {
-        assertThatJson(UserChangeType.REPLACE).isEqualTo("replace");
+        assertThatJson(UserUpdateType.REPLACE).isEqualTo("replace");
     }
 
     @Test
     void fromJson_worksAsExpected() {
-        assertThat(UserChangeType.fromJson("replace")).isEqualTo(UserChangeType.REPLACE);
+        assertThat(UserUpdateType.fromJson("replace")).isEqualTo(UserUpdateType.REPLACE);
     }
 
     @Test
     void fromJsonForUndefinedValue_throwsException() {
-        assertThatThrownBy(() -> UserChangeType.fromJson("do_something_not_defined"))
+        assertThatThrownBy(() -> UserUpdateType.fromJson("do_something_not_defined"))
                 .isExactlyInstanceOf(EntityNotFoundException.class);
     }
 }

@@ -4,18 +4,18 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.spotlight.platform.userprofile.api.core.exceptions.EntityNotFoundException;
 
-public enum UserChangeType {
+public enum UserUpdateType {
     REPLACE("replace");
 
     private final String value;
 
-    UserChangeType(String value) {
+    UserUpdateType(String value) {
         this.value = value;
     }
 
     @JsonCreator
-    public static UserChangeType fromJson(final String jsonValue) {
-        for (UserChangeType type : values()) {
+    public static UserUpdateType fromJson(final String jsonValue) {
+        for (UserUpdateType type : values()) {
             if (type.value.equals(jsonValue)) {
                 return type;
             }
