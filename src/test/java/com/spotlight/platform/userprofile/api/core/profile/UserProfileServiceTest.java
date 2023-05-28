@@ -3,7 +3,6 @@ package com.spotlight.platform.userprofile.api.core.profile;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
-// TODO figure out way to not change to import star
 import static org.mockito.Mockito.*;
 
 import com.spotlight.platform.userprofile.api.core.exceptions.EntityNotFoundException;
