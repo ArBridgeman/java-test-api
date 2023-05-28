@@ -265,10 +265,8 @@ class UserProfileServiceTest {
 
             fixInstantNow(
                     () ->
-                            assertThatThrownBy(
-                                    () -> userProfileService.collect(UserProfileUpdate))
+                            assertThatThrownBy(() -> userProfileService.collect(UserProfileUpdate))
                                     .isExactlyInstanceOf(ClassCastException.class));
-
         }
 
         @Test
@@ -317,6 +315,18 @@ class UserProfileServiceTest {
 
             verify(userProfileServiceMock)
                     .increment(UserProfileUpdateFixture.INCREMENT_USER_PROFILE_UPDATE);
+        }
+
+        @Test
+        void updateWithCollect_worksAsExpected() {
+            when(userProfileDaoMock.get(any(UserId.class)))
+                    .thenReturn(Optional.of(UserProfileFixtures.USER_PROFILE));
+            doCallRealMethod().when(userProfileServiceMock).update(any(UserProfileUpdate.class));
+
+            userProfileServiceMock.update(UserProfileUpdateFixture.COLLECT_USER_PROFILE_UPDATE);
+
+            verify(userProfileServiceMock)
+                    .collect(UserProfileUpdateFixture.COLLECT_USER_PROFILE_UPDATE);
         }
     }
 

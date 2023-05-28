@@ -85,6 +85,7 @@ public class UserProfileService {
         switch (userProfileUpdate.userUpdateType()) {
             case REPLACE -> replace(userProfileUpdate);
             case INCREMENT -> increment(userProfileUpdate);
+            case COLLECT -> collect(userProfileUpdate);
         }
     }
 }
