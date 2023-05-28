@@ -131,9 +131,9 @@ class UserResourceIntegrationTest {
     @DisplayName("updateUserProfile")
     class UpdateUserProfile {
         private static final String USER_ID_PATH_PARAM = "userId";
-        private static final String USER_CHANGE_TYPE = "userUpdateType";
+        private static final String USER_UPDATE_TYPE = "userUpdateType";
         private static final String URL =
-                "/users/{%s}/update/{%s}".formatted(USER_ID_PATH_PARAM, USER_CHANGE_TYPE);
+                "/users/{%s}/update/{%s}".formatted(USER_ID_PATH_PARAM, USER_UPDATE_TYPE);
 
         @Test
         void userWithValidUserUpdateType_returns204(
@@ -145,7 +145,7 @@ class UserResourceIntegrationTest {
                     client.targetRest()
                             .path(URL)
                             .resolveTemplate(USER_ID_PATH_PARAM, UserProfileFixtures.USER_ID)
-                            .resolveTemplate(USER_CHANGE_TYPE, UserUpdateType.REPLACE.toString())
+                            .resolveTemplate(USER_UPDATE_TYPE, UserUpdateType.REPLACE.toString())
                             .request()
                             .post(
                                     Entity.entity(
@@ -164,7 +164,7 @@ class UserResourceIntegrationTest {
                     client.targetRest()
                             .path(URL)
                             .resolveTemplate(USER_ID_PATH_PARAM, UserProfileFixtures.USER_ID)
-                            .resolveTemplate(USER_CHANGE_TYPE, "do_something_undefined")
+                            .resolveTemplate(USER_UPDATE_TYPE, "do_something_undefined")
                             .request()
                             .post(
                                     Entity.entity(
@@ -182,7 +182,7 @@ class UserResourceIntegrationTest {
                     client.targetRest()
                             .path(URL)
                             .resolveTemplate(USER_ID_PATH_PARAM, UserProfileFixtures.USER_ID)
-                            .resolveTemplate(USER_CHANGE_TYPE, UserUpdateType.REPLACE.toString())
+                            .resolveTemplate(USER_UPDATE_TYPE, UserUpdateType.REPLACE.toString())
                             .request()
                             .post(
                                     Entity.entity(
@@ -198,7 +198,7 @@ class UserResourceIntegrationTest {
                             .path(URL)
                             .resolveTemplate(
                                     USER_ID_PATH_PARAM, UserProfileFixtures.INVALID_USER_ID)
-                            .resolveTemplate(USER_CHANGE_TYPE, UserUpdateType.REPLACE.toString())
+                            .resolveTemplate(USER_UPDATE_TYPE, UserUpdateType.REPLACE.toString())
                             .request()
                             .post(
                                     Entity.entity(
@@ -218,7 +218,7 @@ class UserResourceIntegrationTest {
                     client.targetRest()
                             .path(URL)
                             .resolveTemplate(USER_ID_PATH_PARAM, UserProfileFixtures.USER_ID)
-                            .resolveTemplate(USER_CHANGE_TYPE, UserUpdateType.REPLACE.toString())
+                            .resolveTemplate(USER_UPDATE_TYPE, UserUpdateType.REPLACE.toString())
                             .request()
                             .post(
                                     Entity.entity(

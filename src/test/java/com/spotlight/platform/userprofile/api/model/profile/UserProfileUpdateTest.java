@@ -11,6 +11,6 @@ class UserProfileUpdateTest {
     @Test
     void serialization_worksAsExpected() {
         assertThatJson(UserProfileUpdateFixture.USER_PROFILE_CHANGE)
-                .isEqualTo(UserProfileUpdateFixture.SERIALIZED_USER_PROFILE_CHANGE);
+                .isEqualTo(UserProfileUpdateFixture.SERIALIZED_USER_PROFILE_UPDATE);
     }
 }

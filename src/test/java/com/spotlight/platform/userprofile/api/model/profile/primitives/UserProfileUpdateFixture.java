@@ -21,6 +21,6 @@ public class UserProfileUpdateFixture {
             new UserProfileUpdate(
                     UserProfileFixtures.USER_ID, UserUpdateType.REPLACE, REPLACED_PROFILE_PROPERTY);
 
-    public static final String SERIALIZED_USER_PROFILE_CHANGE =
+    public static final String SERIALIZED_USER_PROFILE_UPDATE =
             FixtureHelpers.fixture("/fixtures/model/profile/userProfileUpdate.json");
 }
