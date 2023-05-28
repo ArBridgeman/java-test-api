@@ -1,0 +1,9 @@
+[
+  {
+    "userId": "existing-user-id",
+    "userUpdateType": "invalid",
+    "userProfileProperties": {
+      "property1": "newValue"
+    }
+  }
+]

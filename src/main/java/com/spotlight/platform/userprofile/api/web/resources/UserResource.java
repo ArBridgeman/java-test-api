@@ -46,6 +46,7 @@ public class UserResource {
     }
 
     // Might prefer to separate out bulk vs individual operations into different classes
+    // "The underlying validation framework can't unwrap nested types :/"
     @Path("update")
     @POST
     public void updateUserProfiles(@Valid List<UserProfileUpdate> userProfileUpdates) {

@@ -8,8 +8,12 @@ import com.spotlight.platform.userprofile.api.model.profile.primitives.UserUpdat
 
 import java.util.Map;
 
+import javax.validation.Valid;
+
 public record UserProfileUpdate(
-        @JsonProperty UserId userId,
-        @JsonProperty UserUpdateType userUpdateType,
-        @JsonProperty
+        // If Valid not provided here and UserProfileUpdate is nested, i.e. a list, then these types
+        // are not enforced.
+        @Valid @JsonProperty UserId userId,
+        @Valid @JsonProperty UserUpdateType userUpdateType,
+        @Valid @JsonProperty
                 Map<UserProfilePropertyName, UserProfilePropertyValue> userProfileProperties) {}

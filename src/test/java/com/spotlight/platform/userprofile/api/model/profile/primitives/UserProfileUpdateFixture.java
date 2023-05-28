@@ -42,4 +42,13 @@ public class UserProfileUpdateFixture {
     public static final UserProfileUpdate COLLECT_USER_PROFILE_UPDATE =
             new UserProfileUpdate(
                     UserProfileFixtures.USER_ID, UserUpdateType.COLLECT, COLLECT_PROFILE_PROPERTY);
+
+    public static final UserProfileUpdate COLLECT_WITH_BAD_PROPERTY_USER_PROFILE_UPDATE =
+            new UserProfileUpdate(
+                    UserProfileFixtures.USER_ID,
+                    UserUpdateType.COLLECT,
+                    getUserProfileProperty("property2", "not-a-list"));
+
+    public static final String INVALID_SERIALIZED_USER_PROFILE_UPDATES =
+            FixtureHelpers.fixture("/fixtures/model/profile/invalidUserProfileUpdates.json");
 }
