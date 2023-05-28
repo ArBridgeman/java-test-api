@@ -3,6 +3,7 @@ package com.spotlight.platform.userprofile.api.model.profile.primitives;
 import com.spotlight.platform.helpers.FixtureHelpers;
 import com.spotlight.platform.userprofile.api.model.profile.UserProfileUpdate;
 
+import java.util.List;
 import java.util.Map;
 
 public class UserProfileUpdateFixture {
@@ -34,4 +35,11 @@ public class UserProfileUpdateFixture {
                     UserProfileFixtures.USER_ID,
                     UserUpdateType.INCREMENT,
                     INCREMENT_PROFILE_PROPERTY);
+
+    public static final Map<UserProfilePropertyName, UserProfilePropertyValue>
+            COLLECT_PROFILE_PROPERTY = getUserProfileProperty("property3", List.of("sword"));
+
+    public static final UserProfileUpdate COLLECT_USER_PROFILE_UPDATE =
+            new UserProfileUpdate(
+                    UserProfileFixtures.USER_ID, UserUpdateType.COLLECT, COLLECT_PROFILE_PROPERTY);
 }

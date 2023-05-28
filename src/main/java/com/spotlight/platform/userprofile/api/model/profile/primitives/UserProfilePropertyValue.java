@@ -3,6 +3,8 @@ package com.spotlight.platform.userprofile.api.model.profile.primitives;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
+import java.util.*;
+
 public class UserProfilePropertyValue {
 
     private final Object value;
@@ -36,7 +38,17 @@ public class UserProfilePropertyValue {
 
     public UserProfilePropertyValue increment(UserProfilePropertyValue incrementValue) {
         // Only allows for type integer in increment; may be that we support doubles, etc.
+        // or replace the existing value with the new integer
         return UserProfilePropertyValue.valueOf(
                 (Integer) incrementValue.getValue() + (Integer) value);
+    }
+
+    public UserProfilePropertyValue collect(UserProfilePropertyValue collectValue) {
+        // Only allows for type List; may be that we want to put a string in a list
+        // or replace the existing value
+        ArrayList<Object> combinedList = new ArrayList<>();
+        combinedList.addAll((Collection<?>) value);
+        combinedList.addAll((Collection<?>) collectValue.getValue());
+        return UserProfilePropertyValue.valueOf(combinedList);
     }
 }
