@@ -38,13 +38,13 @@ class UserProfilePropertyValueTest {
     }
 
     @Nested
-    @DisplayName("implement")
-    class Implement {
+    @DisplayName("increment")
+    class Increment {
         private static final UserProfilePropertyValue currentValue =
                 UserProfilePropertyValue.valueOf(INTEGER_VALUE);
 
         @Test
-        void implement_worksCorrectly() {
+        void increment_worksCorrectly() {
             assertThat(currentValue.increment(UserProfilePropertyValue.valueOf(INTEGER_VALUE)))
                     .isEqualTo(UserProfilePropertyValue.valueOf(10));
             assertThat(currentValue.increment(UserProfilePropertyValue.valueOf(-5)))
@@ -52,7 +52,7 @@ class UserProfilePropertyValueTest {
         }
 
         @Test
-        void implement_throwsException() {
+        void increment_throwsException() {
             assertThatThrownBy(
                             () ->
                                     currentValue.increment(
