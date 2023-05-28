@@ -18,7 +18,7 @@ class UserProfilePropertyValueTest {
     private static final List<String> LIST_VALUE = List.of("one", "two");
 
     @Test
-    void equals_ReturnsTrueForEqualValues() {
+    void equals_returnsTrueForEqualValues() {
         assertThat(UserProfilePropertyValue.valueOf(STRING_VALUE))
                 .isEqualTo(UserProfilePropertyValue.valueOf(STRING_VALUE));
         assertThat(UserProfilePropertyValue.valueOf(INTEGER_VALUE))
@@ -30,7 +30,7 @@ class UserProfilePropertyValueTest {
     }
 
     @Test
-    void serialization_WorksCorrectly() {
+    void serialization_worksCorrectly() {
         assertThatJson(UserProfilePropertyValue.valueOf(STRING_VALUE)).isEqualTo("someString");
         assertThatJson(UserProfilePropertyValue.valueOf(INTEGER_VALUE)).isEqualTo("5");
         assertThatJson(UserProfilePropertyValue.valueOf(DOUBLE_VALUE)).isEqualTo("15.2");
