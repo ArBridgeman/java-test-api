@@ -5,7 +5,8 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import com.spotlight.platform.userprofile.api.core.exceptions.EntityNotFoundException;
 
 public enum UserUpdateType {
-    REPLACE("replace");
+    REPLACE("replace"),
+    INCREMENT("increment");
 
     private final String value;
 

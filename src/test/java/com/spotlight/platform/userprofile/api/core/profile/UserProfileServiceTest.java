@@ -54,7 +54,7 @@ class UserProfileServiceTest {
                 new UserProfile(
                         UserProfileFixtures.USER_ID,
                         UserProfileFixtures.LATEST_UPDATE_TIMESTAMP,
-                        UserProfileUpdateFixture.REPLACED_PROFILE_PROPERTY);
+                        UserProfileUpdateFixture.REPLACE_PROFILE_PROPERTY);
 
         @Test
         void replaceExistingProperty_updatesValue() {
@@ -62,7 +62,9 @@ class UserProfileServiceTest {
                     .thenReturn(Optional.of(UserProfileFixtures.USER_PROFILE));
 
             fixInstantNow(
-                    () -> userProfileService.replace(UserProfileUpdateFixture.USER_PROFILE_CHANGE));
+                    () ->
+                            userProfileService.replace(
+                                    UserProfileUpdateFixture.REPLACE_USER_PROFILE_UPDATE));
 
             ArgumentCaptor<UserProfile> myCaptor = ArgumentCaptor.forClass(UserProfile.class);
             verify(userProfileDaoMock).put(myCaptor.capture());
@@ -101,9 +103,95 @@ class UserProfileServiceTest {
             when(userProfileDaoMock.get(any(UserId.class))).thenReturn(Optional.empty());
 
             fixInstantNow(
-                    () -> userProfileService.replace(UserProfileUpdateFixture.USER_PROFILE_CHANGE));
+                    () ->
+                            userProfileService.replace(
+                                    UserProfileUpdateFixture.REPLACE_USER_PROFILE_UPDATE));
 
             compareStubToExpectedUserProfile(UPDATED_USER_PROFILE);
+        }
+    }
+
+    @Nested
+    @DisplayName("increment")
+    class Increment {
+        @Test
+        void incrementExistingIntegerProperty_updatesValue() {
+            UserProfile userProfile =
+                    new UserProfile(
+                            UserProfileFixtures.USER_ID,
+                            UserProfileFixtures.LAST_UPDATE_TIMESTAMP,
+                            UserProfileUpdateFixture.getUserProfileProperty("property2", -10));
+            when(userProfileDaoMock.get(any(UserId.class))).thenReturn(Optional.of(userProfile));
+
+            fixInstantNow(
+                    () ->
+                            userProfileService.increment(
+                                    UserProfileUpdateFixture.INCREMENT_USER_PROFILE_UPDATE));
+
+            compareStubToExpectedUserProfile(
+                    new UserProfile(
+                            UserProfileFixtures.USER_ID,
+                            UserProfileFixtures.LATEST_UPDATE_TIMESTAMP,
+                            UserProfileUpdateFixture.getUserProfileProperty("property2", -8)));
+        }
+
+        @Test
+        void incrementNewProperty_addsValue() {
+            when(userProfileDaoMock.get(any(UserId.class)))
+                    .thenReturn(Optional.of(UserProfileFixtures.USER_PROFILE));
+
+            fixInstantNow(
+                    () ->
+                            userProfileService.increment(
+                                    new UserProfileUpdate(
+                                            UserProfileFixtures.USER_ID,
+                                            UserUpdateType.INCREMENT,
+                                            UserProfileUpdateFixture.INCREMENT_PROFILE_PROPERTY)));
+
+            Map<UserProfilePropertyName, UserProfilePropertyValue> allProperties = new HashMap<>();
+            allProperties.putAll(UserProfileFixtures.USER_PROFILE.userProfileProperties());
+            allProperties.putAll(UserProfileUpdateFixture.INCREMENT_PROFILE_PROPERTY);
+
+            compareStubToExpectedUserProfile(
+                    new UserProfile(
+                            UserProfileFixtures.USER_ID,
+                            UserProfileFixtures.LATEST_UPDATE_TIMESTAMP,
+                            allProperties));
+        }
+
+        @Test
+        void incrementCannotCastToInt_throwException() {
+            when(userProfileDaoMock.get(any(UserId.class)))
+                    .thenReturn(Optional.of(UserProfileFixtures.USER_PROFILE));
+
+            UserProfileUpdate UserProfileUpdate =
+                    new UserProfileUpdate(
+                            UserProfileFixtures.USER_ID,
+                            UserUpdateType.INCREMENT,
+                            UserProfileUpdateFixture.getUserProfileProperty(
+                                    "property2", "not_an_integer"));
+
+            fixInstantNow(
+                    () ->
+                            assertThatThrownBy(
+                                            () -> userProfileService.increment(UserProfileUpdate))
+                                    .isExactlyInstanceOf(ClassCastException.class));
+        }
+
+        @Test
+        void incrementForNonExistingUser_savesNewProfile() {
+            when(userProfileDaoMock.get(any(UserId.class))).thenReturn(Optional.empty());
+
+            fixInstantNow(
+                    () ->
+                            userProfileService.increment(
+                                    UserProfileUpdateFixture.INCREMENT_USER_PROFILE_UPDATE));
+
+            compareStubToExpectedUserProfile(
+                    new UserProfile(
+                            UserProfileFixtures.USER_ID,
+                            UserProfileFixtures.LATEST_UPDATE_TIMESTAMP,
+                            UserProfileUpdateFixture.INCREMENT_PROFILE_PROPERTY));
         }
     }
 
@@ -120,9 +208,22 @@ class UserProfileServiceTest {
                     .thenReturn(Optional.of(UserProfileFixtures.USER_PROFILE));
             doCallRealMethod().when(userProfileServiceMock).update(any(UserProfileUpdate.class));
 
-            userProfileServiceMock.update(UserProfileUpdateFixture.USER_PROFILE_CHANGE);
+            userProfileServiceMock.update(UserProfileUpdateFixture.REPLACE_USER_PROFILE_UPDATE);
 
-            verify(userProfileServiceMock).replace(UserProfileUpdateFixture.USER_PROFILE_CHANGE);
+            verify(userProfileServiceMock)
+                    .replace(UserProfileUpdateFixture.REPLACE_USER_PROFILE_UPDATE);
+        }
+
+        @Test
+        void updateWithIncrement_worksAsExpected() {
+            when(userProfileDaoMock.get(any(UserId.class)))
+                    .thenReturn(Optional.of(UserProfileFixtures.USER_PROFILE));
+            doCallRealMethod().when(userProfileServiceMock).update(any(UserProfileUpdate.class));
+
+            userProfileServiceMock.update(UserProfileUpdateFixture.INCREMENT_USER_PROFILE_UPDATE);
+
+            verify(userProfileServiceMock)
+                    .increment(UserProfileUpdateFixture.INCREMENT_USER_PROFILE_UPDATE);
         }
     }
 

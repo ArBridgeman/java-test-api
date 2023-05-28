@@ -8,9 +8,10 @@ import org.junit.jupiter.api.Test;
 
 class UserProfileUpdateTest {
 
+    // Could do for each type of profile update but same underlying mechanism
     @Test
     void serialization_worksAsExpected() {
-        assertThatJson(UserProfileUpdateFixture.USER_PROFILE_CHANGE)
-                .isEqualTo(UserProfileUpdateFixture.SERIALIZED_USER_PROFILE_CHANGE);
+        assertThatJson(UserProfileUpdateFixture.REPLACE_USER_PROFILE_UPDATE)
+                .isEqualTo(UserProfileUpdateFixture.SERIALIZED_USER_PROFILE_UPDATE);
     }
 }
