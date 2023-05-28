@@ -213,6 +213,18 @@ class UserProfileServiceTest {
             verify(userProfileServiceMock)
                     .replace(UserProfileUpdateFixture.REPLACE_USER_PROFILE_UPDATE);
         }
+
+        @Test
+        void updateWithIncrement_worksAsExpected() {
+            when(userProfileDaoMock.get(any(UserId.class)))
+                    .thenReturn(Optional.of(UserProfileFixtures.USER_PROFILE));
+            doCallRealMethod().when(userProfileServiceMock).update(any(UserProfileUpdate.class));
+
+            userProfileServiceMock.update(UserProfileUpdateFixture.INCREMENT_USER_PROFILE_UPDATE);
+
+            verify(userProfileServiceMock)
+                    .increment(UserProfileUpdateFixture.INCREMENT_USER_PROFILE_UPDATE);
+        }
     }
 
     private void compareStubToExpectedUserProfile(UserProfile expectedUserProfile) {

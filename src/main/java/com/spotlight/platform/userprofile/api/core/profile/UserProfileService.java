@@ -7,7 +7,6 @@ import com.spotlight.platform.userprofile.api.model.profile.UserProfileUpdate;
 import com.spotlight.platform.userprofile.api.model.profile.primitives.UserId;
 import com.spotlight.platform.userprofile.api.model.profile.primitives.UserProfilePropertyName;
 import com.spotlight.platform.userprofile.api.model.profile.primitives.UserProfilePropertyValue;
-import com.spotlight.platform.userprofile.api.model.profile.primitives.UserUpdateType;
 
 import java.time.Instant;
 import java.util.HashMap;
@@ -67,8 +66,9 @@ public class UserProfileService {
     }
 
     public void update(UserProfileUpdate userProfileUpdate) {
-        if (userProfileUpdate.userUpdateType() == UserUpdateType.REPLACE) {
-            replace(userProfileUpdate);
+        switch (userProfileUpdate.userUpdateType()) {
+            case REPLACE -> replace(userProfileUpdate);
+            case INCREMENT -> increment(userProfileUpdate);
         }
     }
 }
