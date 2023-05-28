@@ -12,6 +12,7 @@ public class UserProfileFixtures {
     public static final UserId INVALID_USER_ID = UserId.valueOf("invalid-user-id-%");
 
     public static final Instant LAST_UPDATE_TIMESTAMP = Instant.parse("2021-06-01T09:16:36.123Z");
+    public static final Instant LATEST_UPDATE_TIMESTAMP = Instant.parse("2021-06-02T00:16:36.123Z");
 
     public static final UserProfile USER_PROFILE =
             new UserProfile(
