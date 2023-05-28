@@ -47,6 +47,8 @@ class UserProfilePropertyValueTest {
         void implement_worksCorrectly() {
             assertThat(currentValue.increment(UserProfilePropertyValue.valueOf(INTEGER_VALUE)))
                     .isEqualTo(UserProfilePropertyValue.valueOf(10));
+            assertThat(currentValue.increment(UserProfilePropertyValue.valueOf(-5)))
+                    .isEqualTo(UserProfilePropertyValue.valueOf(0));
         }
 
         @Test
