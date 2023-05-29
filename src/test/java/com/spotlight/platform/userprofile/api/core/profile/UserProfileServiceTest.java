@@ -92,7 +92,7 @@ class UserProfileServiceTest {
             allProperties.putAll(UserProfileFixtures.USER_PROFILE.userProfileProperties());
             allProperties.putAll(replaceProperty2);
 
-            compareStubToExpectedUserProfile(
+            compareMockPutToExpectedUserProfile(
                     new UserProfile(
                             UserProfileFixtures.USER_ID,
                             UserProfileFixtures.LATEST_UPDATE_TIMESTAMP,
@@ -108,7 +108,7 @@ class UserProfileServiceTest {
                             userProfileService.replace(
                                     UserProfileUpdateFixture.REPLACE_USER_PROFILE_UPDATE));
 
-            compareStubToExpectedUserProfile(UPDATED_USER_PROFILE);
+            compareMockPutToExpectedUserProfile(UPDATED_USER_PROFILE);
         }
     }
 
@@ -129,7 +129,7 @@ class UserProfileServiceTest {
                             userProfileService.increment(
                                     UserProfileUpdateFixture.INCREMENT_USER_PROFILE_UPDATE));
 
-            compareStubToExpectedUserProfile(
+            compareMockPutToExpectedUserProfile(
                     new UserProfile(
                             UserProfileFixtures.USER_ID,
                             UserProfileFixtures.LATEST_UPDATE_TIMESTAMP,
@@ -153,7 +153,7 @@ class UserProfileServiceTest {
             allProperties.putAll(UserProfileFixtures.USER_PROFILE.userProfileProperties());
             allProperties.putAll(UserProfileUpdateFixture.INCREMENT_PROFILE_PROPERTY);
 
-            compareStubToExpectedUserProfile(
+            compareMockPutToExpectedUserProfile(
                     new UserProfile(
                             UserProfileFixtures.USER_ID,
                             UserProfileFixtures.LATEST_UPDATE_TIMESTAMP,
@@ -190,7 +190,7 @@ class UserProfileServiceTest {
                             userProfileService.increment(
                                     UserProfileUpdateFixture.INCREMENT_USER_PROFILE_UPDATE));
 
-            compareStubToExpectedUserProfile(
+            compareMockPutToExpectedUserProfile(
                     new UserProfile(
                             UserProfileFixtures.USER_ID,
                             UserProfileFixtures.LATEST_UPDATE_TIMESTAMP,
@@ -217,7 +217,7 @@ class UserProfileServiceTest {
                             userProfileService.collect(
                                     UserProfileUpdateFixture.COLLECT_USER_PROFILE_UPDATE));
 
-            compareStubToExpectedUserProfile(
+            compareMockPutToExpectedUserProfile(
                     new UserProfile(
                             UserProfileFixtures.USER_ID,
                             UserProfileFixtures.LATEST_UPDATE_TIMESTAMP,
@@ -242,7 +242,7 @@ class UserProfileServiceTest {
             allProperties.putAll(UserProfileFixtures.USER_PROFILE.userProfileProperties());
             allProperties.putAll(UserProfileUpdateFixture.COLLECT_PROFILE_PROPERTY);
 
-            compareStubToExpectedUserProfile(
+            compareMockPutToExpectedUserProfile(
                     new UserProfile(
                             UserProfileFixtures.USER_ID,
                             UserProfileFixtures.LATEST_UPDATE_TIMESTAMP,
@@ -278,7 +278,7 @@ class UserProfileServiceTest {
                             userProfileService.collect(
                                     UserProfileUpdateFixture.COLLECT_USER_PROFILE_UPDATE));
 
-            compareStubToExpectedUserProfile(
+            compareMockPutToExpectedUserProfile(
                     new UserProfile(
                             UserProfileFixtures.USER_ID,
                             UserProfileFixtures.LATEST_UPDATE_TIMESTAMP,
@@ -330,7 +330,7 @@ class UserProfileServiceTest {
         }
     }
 
-    private void compareStubToExpectedUserProfile(UserProfile expectedUserProfile) {
+    private void compareMockPutToExpectedUserProfile(UserProfile expectedUserProfile) {
         ArgumentCaptor<UserProfile> captor = ArgumentCaptor.forClass(UserProfile.class);
         verify(userProfileDaoMock).put(captor.capture());
 

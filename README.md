@@ -122,6 +122,12 @@ come back to software development.
 ./gradlew check
 ```
 
+### Run formatter
+
+```shell
+./gradlew spotlessApply
+```
+
 ### Run application
 
 ```shell
