@@ -38,7 +38,7 @@ public class UserResource {
     @POST
     public void updateUserProfile(
             @Valid @PathParam("userId") UserId userId,
-            @PathParam("userUpdateType") UserUpdateType userUpdateType,
+            @Valid @PathParam("userUpdateType") UserUpdateType userUpdateType,
             Map<UserProfilePropertyName, UserProfilePropertyValue> userProfileProperties) {
         UserProfileUpdate userProfileUpdate =
                 new UserProfileUpdate(userId, userUpdateType, userProfileProperties);
